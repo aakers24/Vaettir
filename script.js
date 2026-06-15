@@ -247,6 +247,8 @@ const pointer = {
     influenceRadius: screenScale * 256
 };
 
+const activePointers = [];
+
 function mouseStarInteract() {
     //console.log(pointer.x, pointer.y); // DEBUG
     connectionStars.forEach(star => {
@@ -318,29 +320,31 @@ spaceCanvas.addEventListener("pointermove", (event) => {
     pointer.x = event.clientX;
     pointer.y = event.clientY;
 
-    if(prevPointerY !== 0 && event.pointerType !== "mouse") {
+    if(prevPointerY !== 0 && event.pointerType !== "mouse" && activePointers.length === 1) {
         const drag = prevPointerY - event.clientY;
-        if(Math.abs(drag) > 64) {
-            scrolling += drag;
-            prevPointerY = event.clientY;
-        }
+        scrolling += drag;
+        prevPointerY = event.clientY;
     }
 });
 
 spaceCanvas.addEventListener("pointerleave", (event) => {
     pointerReset();
+    activePointers.pop();
 });
 
 spaceCanvas.addEventListener("pointerdown", (event) => {
     prevPointerY = event.clientY;
+    activePointers.push(1);
 });
 
 spaceCanvas.addEventListener("pointerup", () => {
     pointerReset();
+    activePointers.pop();
 });
 
 spaceCanvas.addEventListener("pointercancel", () => {
     pointerReset();
+    activePointers.pop();
 });
 
 spaceCanvas.addEventListener("wheel", (event) => {
@@ -362,9 +366,9 @@ function scrollStarInteract() {
     if (scrolling === 0) {
         return;
     } else {
-        //console.log(pointer.x, pointer.y); // DEBUG
         connectionStars.forEach(star => {
-            star.yVel += scrolling / 4096;
+            let scrollVel = (scrolling) / (4096);
+            star.yVel += scrollVel;
 
             // Friction
             star.xVel -= (star.xVel - star.baseXVel) * .064;

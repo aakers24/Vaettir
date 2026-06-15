@@ -6,13 +6,15 @@ let screenScale = 0;
 let starDistance = 0;
 let frameTime = 0;
 let prevTimestamp = 0;
+let scrolling = 0;
+let prevPointerY = 0;
 
 // Dynamic canvas sizing
 function resizeCanvas() {
     spaceCanvas.width = window.innerWidth;
     spaceCanvas.height = window.innerHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
-    starDistance = screenScale * 240;
+    starDistance = screenScale * 256;
     influenceRadius = screenScale * 256
 }
 
@@ -25,7 +27,6 @@ resizeCanvas(); // Initalization resize event
 // Procedural Randomness Generator
 function seedGen() {
 return (Math.random() * Math.random() * 8821 * 43481 * 51659 * 73476511) % Number.MAX_SAFE_INTEGER;
-//console.log(seed); // DEBUG
 }
 
 
@@ -81,8 +82,7 @@ function generateStars(numStars) {
     connectionStars.push(...starsA, ...starsB);
 }
 
-generateStars(12); // THIS SHOULD MOVE TO A SETUP LOCATION?
-//console.log(starsA); // DEBUG
+generateStars(12);
 
 function drawStars() {
     // Class D
@@ -205,6 +205,10 @@ function drawFPS(timestamp, frameTime) {
 // Update Loop
 function update() {
     mouseStarInteract();
+    if(scrolling !== 0) {
+        scrollStarInteract();
+        scrolling = Math.max(0, Math.floor(scrolling / 2));
+    }
 }
 
 
@@ -237,66 +241,36 @@ requestAnimationFrame(render);
 
 
 // Mouse, mouse functions, and mouse event listeners
-const mouse = {
+const pointer = {
     x: undefined,
     y: undefined,
     influenceRadius: screenScale * 256
 };
 
 function mouseStarInteract() {
+    //console.log(pointer.x, pointer.y); // DEBUG
     connectionStars.forEach(star => {
         let starScreenX = star.x * spaceCanvas.width;
         let starScreenY = star.y * spaceCanvas.height;
-        if (mouse.x !== undefined && mouse.y !== undefined) {
-            let distance = Math.sqrt((mouse.x - starScreenX) ** 2 + (mouse.y - starScreenY) ** 2);
-            //console.log(mouse.x, mouse.y, distance, mouse.influenceRadius); // DEBUG
+        if (pointer.x !== undefined && pointer.y !== undefined) {
+            let distance = Math.sqrt((pointer.x - starScreenX) ** 2 + (pointer.y - starScreenY) ** 2);
             // Mouse Influence
-            if (distance < mouse.influenceRadius) {
+            if (distance < pointer.influenceRadius) {
                 const force = (influenceRadius - distance) / influenceRadius;
 
                 // Component Vectors
-                let dirX = (mouse.x - starScreenX) / distance;
-                let dirY = (mouse.y - starScreenY) / distance;
+                let dirX = (pointer.x - starScreenX) / distance;
+                let dirY = (pointer.y - starScreenY) / distance;
 
                 // Apply force to vel with accel acceleration
                 const accel = .16
                 star.xVel += (dirX * force * accel) / spaceCanvas.width;
                 star.yVel += (dirY * force * accel) / spaceCanvas.height;
-
-                //console.log(dirX, dirY, mouse.x, star.x, distance); // DEBUG
             } else { // Star reset
-                let starScreenInitX = star.initX * spaceCanvas.width;
-                let starScreenInitY = star.initY * spaceCanvas.height;
-                let distance = Math.sqrt((starScreenInitX - starScreenX) ** 2 + (starScreenInitY - starScreenY) ** 2);
-                if (distance > 0) {
-                    const force = (((spaceCanvas.width + spaceCanvas.height) / 2) - distance) / ((spaceCanvas.width + spaceCanvas.height) / 2);
-
-                    // Component Vectors
-                    let dirX = (starScreenInitX - starScreenX) / distance;
-                    let dirY = (starScreenInitY - starScreenY) / distance;
-
-                    // Apply force to vel with accel acceleration
-                    const accel = .025
-                    star.xVel += (dirX * force * accel) / spaceCanvas.width;
-                    star.yVel += (dirY * force * accel) / spaceCanvas.height;
-                }
+                starReset(star);
             }
         } else { // Star Reset
-            let starScreenInitX = star.initX * spaceCanvas.width;
-            let starScreenInitY = star.initY * spaceCanvas.height;
-            let distance = Math.sqrt((starScreenInitX - starScreenX) ** 2 + (starScreenInitY - starScreenY) ** 2);
-            if (distance > 0) {
-                const force = (((spaceCanvas.width + spaceCanvas.height) / 2) - distance) / ((spaceCanvas.width + spaceCanvas.height) / 2);
-
-                // Component Vectors
-                let dirX = (starScreenInitX - starScreenX) / distance;
-                let dirY = (starScreenInitY - starScreenY) / distance;
-
-                // Apply force to vel with accel acceleration
-                const accel = .025
-                star.xVel += (dirX * force * accel) / spaceCanvas.width;
-                star.yVel += (dirY * force * accel) / spaceCanvas.height;
-            }
+            starReset(star);
         }
 
         // Friction
@@ -307,24 +281,104 @@ function mouseStarInteract() {
         star.x += star.xVel;
         star.y += star.yVel;
 
-        // Edge wrapping
+        // Edge wrapping / handling
         if (star.x < 0) star.x = 1;
         if (star.x > 1) star.x = 0;
         if (star.y < 0) star.y = 1;
         if (star.y > 1) star.y = 0;
-
-        //console.log(star); // DEBUG
-        //console.log("x, y, xVel, yVel: " + star.x, star.y, star.xVel, star.yVel); // DEBUG
     });
 }
 
-window.addEventListener("mousemove", (event) => {
-    mouse.x = event.x;
-    mouse.y = event.y;
-    //console.log(mouse.x, mouse.y); // DEBUG
+function starReset(star) {
+    let ndX = star.initX - star.x;
+    let ndY = star.initY - star.y;
+
+    // Account for distance across the edges of the screen
+    if (ndX > .5) ndX -= 1;
+    if (ndX < -.5) ndX += 1;
+    if (ndY > .5) ndY -= 1;
+    if (ndY < -.5) ndY += 1;
+
+    let normDistance = Math.sqrt((ndX ** 2) + (ndY ** 2));
+    
+    const force = .64;
+
+    // Component Vectors
+    let normDirX = normDistance > 0 ? (ndX / normDistance) : 0;
+    let normDirY = normDistance > 0 ? (ndY / normDistance) : 0;
+
+
+    // Apply force to vel with accel acceleration
+    let accel = normDistance * .0032;
+    star.xVel += (normDirX * force * accel);
+    star.yVel += (normDirY * force * accel);
+}
+
+spaceCanvas.addEventListener("pointermove", (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+
+    if(prevPointerY !== 0 && event.pointerType !== "mouse") {
+        const drag = prevPointerY - event.clientY;
+        if(Math.abs(drag) > 64) {
+            scrolling += drag;
+            prevPointerY = event.clientY;
+        }
+    }
 });
 
-window.addEventListener("mouseout", () => {
-    mouse.x = undefined;
-    mouse.y = undefined;
+spaceCanvas.addEventListener("pointerleave", (event) => {
+    pointerReset();
 });
+
+spaceCanvas.addEventListener("pointerdown", (event) => {
+    prevPointerY = event.clientY;
+});
+
+spaceCanvas.addEventListener("pointerup", () => {
+    pointerReset();
+});
+
+spaceCanvas.addEventListener("pointercancel", () => {
+    pointerReset();
+});
+
+spaceCanvas.addEventListener("wheel", (event) => {
+    scrolling += event.deltaY;
+}, {passive: true});
+
+
+
+function pointerReset() {
+    pointer.x = undefined;
+    pointer.y = undefined;
+    prevPointerY = 0;
+}
+
+
+
+// Scroll
+function scrollStarInteract() {
+    if (scrolling === 0) {
+        return;
+    } else {
+        //console.log(pointer.x, pointer.y); // DEBUG
+        connectionStars.forEach(star => {
+            star.yVel += scrolling / 4096;
+
+            // Friction
+            star.xVel -= (star.xVel - star.baseXVel) * .064;
+            star.yVel -= (star.yVel - star.baseYVel) * .064;
+
+            // Move star
+            star.x += star.xVel;
+            star.y += star.yVel;
+
+            // Edge wrapping / handling
+            if (star.x < 0) star.x = 1;
+            if (star.x > 1) star.x = 0;
+            if (star.y < 0) star.y = 1;
+            if (star.y > 1) star.y = 0;
+        });
+    }
+}

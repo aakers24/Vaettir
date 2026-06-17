@@ -1,6 +1,7 @@
 // Canvas Setup
 const spaceCanvas = document.getElementById("spaceCanvas");
 const spctx = spaceCanvas.getContext("2d");
+//spctx.font = "32px 'Courier New', Courier, monospace";
 let seed = seedGen();
 let screenScale = 0;
 let starDistance = 0;
@@ -186,6 +187,66 @@ function drawSpace() {
 
 
 
+// Generate Headers
+const headers = [];
+function generateHeader(name, link) {
+    // Generate Hex version of name
+    name = name.toString().toUpperCase();
+    let nameArray = [...name];
+    let nameArray2 = [];
+    nameArray.forEach((char) => {
+        nameArray2.push(char);
+        for(let i = 0; i < 3; i++){
+            nameArray2.push(".");
+        }
+    });
+
+    let hexArray = [];
+    for (let i = 0; i < name.length; i++) {
+        hexArray[i] = "0x" + name.charCodeAt(i).toString(16);
+    }
+    let hexName = hexArray.join("");
+
+    return {name, hexName, link};
+
+}
+
+// DEFINE HARDCODED HEADERS
+headers.push(generateHeader("Vaettir", "EotN"));
+
+function drawHeaders(){
+    headers.forEach((header) => {
+        spctx.font = "24px 'Courier New', Courier, monospace";
+        spctx.fillStyle = "rgb(216, 216, 216)";
+
+        headerWidth = spctx.measureText(header.hexName).width;
+        headerX = spaceCanvas.width / 2 - (headerWidth / 2); // CHANGE - Generated X location of the header 
+        headerY = spaceCanvas.height / 2; // CHANGE - Needs to be centered on the y axis of whever the generated header is so will depend on box height too
+
+        for(let i = 0; i < header.name.length; i++) {
+            let plainChunk = header.name[i];
+
+            let hexChunk = header.hexName.substring(i * 3, (i * 3) + 3);
+
+            let chunkWidth = spctx.measureText(hexChunk).width;
+            let chunkPosX = headerX + (chunkWidth * i) + (chunkWidth / 2);
+            let distance = Math.sqrt(((pointer.x - chunkPosX) ** 2) + ((pointer.y - headerY) ** 2));
+
+            // If close enough, draw plain
+            if(distance < (influenceRadius * .75)) {
+                let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
+
+                spctx.fillText(plainChunk, centered, headerY);
+            } else { // If not close enough, keep encrypted 
+                spctx.fillText(hexChunk, headerX + (chunkWidth * i), headerY);
+            }
+        }
+    });
+}
+
+
+
+// Generate 
 // FPS counter
 const frames = [];
 let fps = 0;
@@ -195,6 +256,7 @@ function drawFPS(timestamp, frameTime) {
     }
     frames.push(timestamp);
     fps = frames.length;
+    spctx.font = "10px 'Courier New', Courier, monospace";
     spctx.fillStyle = "rgb(170, 170, 170)";
     spctx.fillText(fps + " FPS", spaceCanvas.width - 200, 100);
     spctx. fillText("Frame time: " + frameTime + " ms", spaceCanvas.width - 200, 120);
@@ -218,6 +280,8 @@ function render(timestamp) {
     spctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
 
     drawSpace();
+
+    drawHeaders();
     
     frameTime = timestamp - prevTimestamp;
     prevTimestamp = timestamp;

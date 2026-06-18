@@ -5,7 +5,7 @@ html, body {
     height: 100%;
     overflow: hidden;
     /* background-color: #070414; */
-    background-color: #af523a;
+    background-color: #AAAAAA;
 
     cursor: url("assets/cursor.png") 32 32, none;
 }
@@ -16,6 +16,6 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
-    height: 100dvh;
+    /* height: 100vh; */
+    height: 100lvh;
 }

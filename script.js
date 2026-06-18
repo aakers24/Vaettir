@@ -10,8 +10,6 @@ let prevTimestamp = 0;
 let scrolling = 0;
 let scrollPos = 0;
 let prevPointerY = 0;
-let pointerX = undefined;
-let pointerY = undefined;
 
 // For mobile touch behaviour
 spaceCanvas.style.touchAction = "pan-x pan-y";
@@ -242,8 +240,8 @@ function drawHeaders(){
 
 
             // Decrypt from scrolling
-            let scrollPage = Math.floor(scrollPos / spaceCanvas.height);
-            let pageSpot = scrollPos % spaceCanvas.height;
+            let scrollPage = Math.abs(Math.floor(scrollPos / spaceCanvas.height));
+            let pageSpot = Math.abs(scrollPos % spaceCanvas.height);
             if(scrollPage % 2 == 0 && pageSpot > headerY) {
                 let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
 

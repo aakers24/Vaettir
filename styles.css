@@ -5,7 +5,7 @@ html, body {
     height: 100%;
     overflow: hidden;
     /* background-color: #070414; */
-    background-color: #AAAAAA;
+    background-color: #af523a;
 
     cursor: url("assets/cursor.png") 32 32, none;
 }

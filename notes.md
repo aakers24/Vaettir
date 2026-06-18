@@ -29,7 +29,7 @@
 
 * Multi-touch is totally broken on mobile as it tries to do all sorts of stuff instead of just what the website wants - Fixed?
 
-* Make it so mobile extends canvas so it covers the whole screen - Fixed?
+* Make it so mobile extends canvas so it covers the whole screen
 
 * Scale down amount of stars on mobile OR lessen the constellations distance or something like that. Just too noisy
     * Make constellation distance scale more so it is more similar distance proportionally when mobile like the current fullscreen version

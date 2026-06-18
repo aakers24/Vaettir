@@ -6,6 +6,8 @@ body {
     overflow: hidden;
     /* background-color: #070414; */
     background-color: #AAAAAA;
+
+    cursor: url("assets/cursor.png") 32 32, none;
 }
 
 /* canvas {

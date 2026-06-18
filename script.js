@@ -8,20 +8,27 @@ let starDistance = 0;
 let frameTime = 0;
 let prevTimestamp = 0;
 let scrolling = 0;
+let scrollPos = 0;
 let prevPointerY = 0;
+let pointerX = undefined;
+let pointerY = undefined;
+
+// For mobile touch behaviour
+spaceCanvas.style.touchAction = "pan-x pan-y";
+spaceCanvas.style.userSelect = "none";
+spaceCanvas.style.webkitUserSelect = "none";
 
 // Dynamic canvas sizing
 function resizeCanvas() {
     spaceCanvas.width = window.innerWidth;
     spaceCanvas.height = window.innerHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
-    starDistance = screenScale * 256;
-    influenceRadius = screenScale * 256
+    starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
+    pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
 }
 
 // Dynamic canvas resizing
 window.addEventListener("resize", resizeCanvas);
-resizeCanvas(); // Initalization resize event
 
 
 
@@ -83,7 +90,7 @@ function generateStars(numStars) {
     connectionStars.push(...starsA, ...starsB);
 }
 
-generateStars(12);
+
 
 function drawStars() {
     // Class D
@@ -232,13 +239,31 @@ function drawHeaders(){
             let chunkPosX = headerX + (chunkWidth * i) + (chunkWidth / 2);
             let distance = Math.sqrt(((pointer.x - chunkPosX) ** 2) + ((pointer.y - headerY) ** 2));
 
-            // If close enough, draw plain
-            if(distance < (influenceRadius * .75)) {
+
+
+            // Decrypt from scrolling
+            let scrollPage = Math.floor(scrollPos / spaceCanvas.height);
+            let pageSpot = scrollPos % spaceCanvas.height;
+            if(scrollPage % 2 == 0 && pageSpot > headerY) {
                 let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
 
                 spctx.fillText(plainChunk, centered, headerY);
-            } else { // If not close enough, keep encrypted 
-                spctx.fillText(hexChunk, headerX + (chunkWidth * i), headerY);
+                continue;
+            } else if(scrollPage % 2 == 1 && pageSpot < headerY) {
+                let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
+
+                spctx.fillText(plainChunk, centered, headerY);
+                continue;
+            } else { // If scrolling isn't decrypting, see if mouse will
+                // If close enough, draw plain
+                if(distance < (pointer.influenceRadius * .75)) {
+                    let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
+
+                    spctx.fillText(plainChunk, centered, headerY);
+                } else { // If not close enough, keep encrypted 
+                    spctx.fillText(hexChunk, headerX + (chunkWidth * i), headerY);
+                }
+                continue;
             }
         }
     });
@@ -308,7 +333,7 @@ requestAnimationFrame(render);
 const pointer = {
     x: undefined,
     y: undefined,
-    influenceRadius: screenScale * 256
+    influenceRadius: spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8
 };
 
 const activePointers = [];
@@ -322,7 +347,7 @@ function mouseStarInteract() {
             let distance = Math.sqrt((pointer.x - starScreenX) ** 2 + (pointer.y - starScreenY) ** 2);
             // Mouse Influence
             if (distance < pointer.influenceRadius) {
-                const force = (influenceRadius - distance) / influenceRadius;
+                const force = (pointer.influenceRadius - distance) / pointer.influenceRadius;
 
                 // Component Vectors
                 let dirX = (pointer.x - starScreenX) / distance;
@@ -388,6 +413,8 @@ spaceCanvas.addEventListener("pointermove", (event) => {
         const drag = prevPointerY - event.clientY;
         scrolling += drag;
         prevPointerY = event.clientY;
+
+        scrollPos += drag;
     }
 });
 
@@ -397,22 +424,35 @@ spaceCanvas.addEventListener("pointerleave", (event) => {
 });
 
 spaceCanvas.addEventListener("pointerdown", (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+
     prevPointerY = event.clientY;
     activePointers.push(1);
 });
 
-spaceCanvas.addEventListener("pointerup", () => {
-    pointerReset();
+spaceCanvas.addEventListener("pointerup", (event) => {
+    if(event.pointerType === "mouse") {
+
+    } else {
+        pointerReset();
+    }
     activePointers.pop();
 });
 
 spaceCanvas.addEventListener("pointercancel", () => {
-    pointerReset();
+    if(event.pointerType === "mouse") {
+
+    } else {
+        pointerReset();
+    }
     activePointers.pop();
 });
 
 spaceCanvas.addEventListener("wheel", (event) => {
     scrolling += event.deltaY;
+
+    scrollPos += event.deltaY;
 }, {passive: true});
 
 
@@ -450,3 +490,9 @@ function scrollStarInteract() {
         });
     }
 }
+
+
+
+// SETUP CODE
+resizeCanvas(); // Initalization resize event
+generateStars(12);

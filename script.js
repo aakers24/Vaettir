@@ -242,6 +242,10 @@ function drawHeaders(){
             // Decrypt from scrolling
             let scrollPage = Math.abs(Math.floor(scrollPos / spaceCanvas.height));
             let pageSpot = Math.abs(scrollPos % spaceCanvas.height);
+            if(Math.floor(scrollPos / spaceCanvas.height) === -1) {
+                spctx.fillText(hexChunk, headerX + (chunkWidth * i), headerY);
+                continue;
+            }
             if(scrollPage % 2 == 0 && pageSpot > headerY) {
                 let centered = chunkPosX  - (spctx.measureText(plainChunk).width / 2);
 

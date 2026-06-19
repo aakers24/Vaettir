@@ -23,12 +23,16 @@ function drawDocSizes(){
     spctx.fillText(window.innerWidth + " " + window.innerHeight, 10, 120);
     spctx.fillText(document.documentElement.clientWidth + " " + document.documentElement.clientHeight, 10, 140);
     spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 180);
+    spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 200);
+    spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 220);
 }
 
 // Dynamic canvas sizing
 function resizeCanvas() {
     console.log(spaceCanvas.getBoundingClientRect()); // DEBUG
     console.log(window.innerWidth, window.innerHeight); // DEBUG
+    console.log(spaceCanvas.width, spaceCanvas.height);
+    console.log(spaceCanvas.style.width, spaceCanvas.style.height);
     console.log(
         document.documentElement.clientWidth, document.documentElement.clientHeight
     ); // DEBUG
@@ -40,8 +44,8 @@ function resizeCanvas() {
 
 
     const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
-    spaceCanvas.width = screen.width;
-    spaceCanvas.height = screen.height;
+    spaceCanvas.width = canvasBoundingBox.width;
+    spaceCanvas.height = canvasBoundingBox.height;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;

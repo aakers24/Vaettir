@@ -217,7 +217,7 @@ function generateHeader(name, link) {
 }
 
 // DEFINE HARDCODED HEADERS
-headers.push(generateHeader("Vaettir4", "EotN"));
+headers.push(generateHeader("Vaettir5", "EotN"));
 
 function drawHeaders(){
     headers.forEach((header) => {

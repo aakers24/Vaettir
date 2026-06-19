@@ -12,9 +12,9 @@ let scrollPos = 0;
 let prevPointerY = 0;
 
 // For mobile touch behaviour
-spaceCanvas.style.touchAction = "pan-x pan-y";
-spaceCanvas.style.userSelect = "none";
-spaceCanvas.style.webkitUserSelect = "none";
+// spaceCanvas.style.touchAction = "pan-x pan-y";
+// spaceCanvas.style.userSelect = "none";
+// spaceCanvas.style.webkitUserSelect = "none";
 
 function drawDocSizes(){
     spctx.font = "20px 'Courier New', Courier, monospace";
@@ -25,6 +25,7 @@ function drawDocSizes(){
     spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 180);
     spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 200);
     spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 220);
+    spctx.fillText(window.outerWidth + " " + window.outerHeight, 10, 240);
 }
 
 // Dynamic canvas sizing
@@ -44,8 +45,8 @@ function resizeCanvas() {
 
 
     const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
-    spaceCanvas.width = canvasBoundingBox.width;
-    spaceCanvas.height = canvasBoundingBox.height;
+    spaceCanvas.width = window.outerWidth;
+    spaceCanvas.height = window.outerHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
@@ -524,5 +525,5 @@ function scrollStarInteract() {
 
 
 // SETUP CODE
-// resizeCanvas(); // Initalization resize event
+resizeCanvas(); // Initalization resize event
 generateStars(12);

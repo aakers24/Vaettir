@@ -18,6 +18,7 @@
 
 * Shooting stars - possibly that also glitch around them or otherwise interact
     * They leave trails?
+    * Make the mouse have a shooting star tail when clicking/dragging
 
 * Button to just play the game so it hides all the serious stuff and lets you try to collect all the stars
     * Could be time based and/or levels based on physics changing to make it harder.

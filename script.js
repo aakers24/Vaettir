@@ -18,8 +18,8 @@ spaceCanvas.style.webkitUserSelect = "none";
 
 // Dynamic canvas sizing
 function resizeCanvas() {
-    spaceCanvas.width = spaceCanvas.clientWidth;
-    spaceCanvas.height = spaceCanvas.clientHeight;
+    spaceCanvas.width = window.innerWidth;
+    spaceCanvas.height = window.innerHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
@@ -217,7 +217,7 @@ function generateHeader(name, link) {
 }
 
 // DEFINE HARDCODED HEADERS
-headers.push(generateHeader("Vaettir5", "EotN"));
+headers.push(generateHeader("Vaettir6", "EotN"));
 
 function drawHeaders(){
     headers.forEach((header) => {

@@ -44,10 +44,8 @@ function resizeCanvas() {
 
 
     const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
-    // spaceCanvas.width = canvasBoundingBox.width;
-    // spaceCanvas.height = canvasBoundingBox.height;
-    spaceCanvas.width = 4000;
-    spaceCanvas.height = 4000;
+    spaceCanvas.width = canvasBoundingBox.width;
+    spaceCanvas.height = canvasBoundingBox.height;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
@@ -526,5 +524,5 @@ function scrollStarInteract() {
 
 
 // SETUP CODE
-resizeCanvas(); // Initalization resize event
+// resizeCanvas(); // Initalization resize event
 generateStars(12);

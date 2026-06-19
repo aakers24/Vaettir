@@ -1,8 +1,6 @@
 // Canvas Setup
 const spaceCanvas = document.getElementById("spaceCanvas");
 const spctx = spaceCanvas.getContext("2d");
-const easel = document.getElementsByClassName("easel");
-console.log(easel); // DEBUG
 //spctx.font = "32px 'Courier New', Courier, monospace";
 let seed = seedGen();
 let screenScale = 0;
@@ -20,12 +18,12 @@ spaceCanvas.style.webkitUserSelect = "none";
 
 // Dynamic canvas sizing
 function resizeCanvas() {
-    spaceCanvas.width = easel.clientWidth;
-    spaceCanvas.height = easel.clientHeight;
+    const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
+    spaceCanvas.width = canvasBoundingBox.width;
+    spaceCanvas.height = canvasBoundingBox.height;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
-    console.log(spaceCanvas); // DEBUG
 }
 
 // Dynamic canvas resizing

@@ -16,11 +16,32 @@ spaceCanvas.style.touchAction = "pan-x pan-y";
 spaceCanvas.style.userSelect = "none";
 spaceCanvas.style.webkitUserSelect = "none";
 
+function drawDocSizes(){
+    spctx.font = "20px 'Courier New', Courier, monospace";
+    spctx.fillStyle = "rgb(240, 240, 240)";
+    spctx.fillText(spaceCanvas.getBoundingClientRect().width + " " + spaceCanvas.getBoundingClientRect().height, 10, 100);
+    spctx.fillText(window.innerWidth + " " + window.innerHeight, 10, 120);
+    spctx.fillText(document.documentElement.clientWidth + " " + document.documentElement.clientHeight, 10, 140);
+    spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 180);
+}
+
 // Dynamic canvas sizing
 function resizeCanvas() {
+    console.log(spaceCanvas.getBoundingClientRect()); // DEBUG
+    console.log(window.innerWidth, window.innerHeight); // DEBUG
+    console.log(
+        document.documentElement.clientWidth, document.documentElement.clientHeight
+    ); // DEBUG
+
+    console.log(
+        window.visualViewport?.width + " " + window.visualViewport?.height
+    ); // DEBUG
+
+
+
     const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
-    spaceCanvas.width = canvasBoundingBox.width;
-    spaceCanvas.height = canvasBoundingBox.height;
+    spaceCanvas.width = screen.width;
+    spaceCanvas.height = screen.height;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
@@ -316,6 +337,8 @@ function render(timestamp) {
     drawFPS(timestamp, frameTime);
 
     update();
+
+    drawDocSizes(); // DEBUG
 
     requestAnimationFrame(render);
 

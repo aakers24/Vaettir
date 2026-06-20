@@ -9,6 +9,8 @@ let prevTimestamp = 0;
 let scrolling = 0;
 let scrollPos = 0;
 let prevPointerY = 0;
+let headerSpaceX = 0;
+let headerSpaceY = 0;
 
 
 
@@ -19,6 +21,15 @@ function resizeCanvas() {
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
+    headerSpaceX = spaceCanvas.width * .86;
+    headerSpaceY = spaceCanvas.height * .86;
+    headers.forEach((header) => {
+        let coords = calcHeaderLocation(header);
+        let x = coords.x;
+        let y = coords.y;
+        header.x = x;
+        header.y = y;
+    });
 }
 
 // Dynamic canvas resizing
@@ -208,12 +219,43 @@ function generateHeader(name, link) {
     }
     let hexName = hexArray.join("");
 
-    return {name, hexName, link};
+    // Generate Location
+    seed = seedGen();
+    let initX = (Math.abs(seed) % 100000 / 100000);
+    seed = seedGen();
+    let initY  = (Math.abs(seed) % 100000 / 100000);
+
+    let coords = calcHeaderLocation({name, hexName, initX, initY});
+    let x = coords.x;
+    let y = coords.y;
+
+    return {name, hexName, link, x, y, initX, initY};
 
 }
 
-// DEFINE HARDCODED HEADERS
-headers.push(generateHeader("Vaettir", "EotN"));
+function calcHeaderLocation(header) {
+    spctx.font = "24px 'Courier New', Courier, monospace";
+    headerWidth = spctx.measureText(header.hexName).width;
+    headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
+    headerX = header.initX * headerSpaceX;
+    headerY = header.initY * headerSpaceY;
+    
+    if(headerWidth + headerX > spaceCanvas.width) {
+        headerX -= (headerWidth + headerX) - spaceCanvas.width
+    }
+    if(headerY - headerHeight < 0) {
+        headerY += headerHeight;
+    } else if (headerY + headerHeight > spaceCanvas.height) {
+        headerY -= headerHeight;
+    }
+    
+    x = headerX;
+    y = headerY;
+
+    return {x, y};
+}
+
+
 
 function drawHeaders(){
     headers.forEach((header) => {
@@ -221,8 +263,12 @@ function drawHeaders(){
         spctx.fillStyle = "rgb(216, 216, 216)";
 
         headerWidth = spctx.measureText(header.hexName).width;
-        headerX = spaceCanvas.width / 2 - (headerWidth / 2); // CHANGE - Generated X location of the header 
-        headerY = spaceCanvas.height / 2; // CHANGE - Needs to be centered on the y axis of whever the generated header is so will depend on box height too
+        headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
+
+        headerX = header.x;
+        headery = header.y;
+
+        // console.log(header); // DEBUG
 
         for(let i = 0; i < header.name.length; i++) {
             let plainChunk = header.name[i];
@@ -497,10 +543,19 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
 
 
-// SETUP CODE
-resizeCanvas(); // Initalization resize event
+// -------- SETUP CODE --------
+
+// Initalization resize event
+resizeCanvas();
+
+// Generate Components
 generateStars(12);
-// Reload/time for mobile
+
+// DEFINE HARDCODED HEADERS
+headers.push(generateHeader("Vaettir", "EotN"));
+// headers.push(generateHeader("Vaettir2", "EotN"));
+
+// Reload/resize for mobile
 window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -508,3 +563,4 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+// -------- SETUP CODE --------

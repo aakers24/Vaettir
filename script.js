@@ -24,9 +24,10 @@ function drawDocSizes(){
     spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 220);
     spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 240);
     spctx.fillText(CSS.supports("height", "100dvh") + " " + CSS.supports("height", "100svh") + " " + CSS.supports("height", "100lvh") + " " + CSS.supports("height", "100vh"), 10, 260);
+    spctx.fillText("count/w/h: " + resizeCounter + " " + spaceCanvas.width + " " + spaceCanvas.height, 20, window.innerHeight - 50);
 }
 
-
+let resizeCounter = 0;// DEBUG
 
 // Dynamic canvas sizing
 function resizeCanvas() {
@@ -35,6 +36,8 @@ function resizeCanvas() {
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
+
+    resizeCounter++;
 }
 
 // Dynamic canvas resizing

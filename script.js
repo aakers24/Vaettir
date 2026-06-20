@@ -30,8 +30,8 @@ function drawDocSizes(){
 
 // Dynamic canvas sizing
 function resizeCanvas() {
-    spaceCanvas.width = spaceCanvas.clientWidth;
-    spaceCanvas.height = spaceCanvas.clientHeight;
+    spaceCanvas.width = screen.width;
+    spaceCanvas.height = screen.height;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;

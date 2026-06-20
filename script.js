@@ -12,8 +12,18 @@ let prevPointerY = 0;
 
 
 
+let mutationLog = [];
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach(m => {
+        mutationLog.push(`mutation: ${m.attributeName} w:${spaceCanvas.width} h:${spaceCanvas.height}`);
+    });
+});
+observer.observe(spaceCanvas, { attributes: true });
+
 function drawDocSizes(){
     spctx.font = "20px 'Courier New', Courier, monospace";
+    spctx.fillStyle = "red";
+    spctx.fillRect(0, spaceCanvas.height - 50, spaceCanvas.width, 50);
     spctx.fillStyle = "rgb(240, 240, 240)";
     spctx.fillText(spaceCanvas.clientWidth + " " + spaceCanvas.clientHeight, 10, 100);
     spctx.fillText(window.innerWidth + " " + window.innerHeight, 10, 120);
@@ -24,7 +34,10 @@ function drawDocSizes(){
     spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 220);
     spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 240);
     spctx.fillText(CSS.supports("height", "100dvh") + " " + CSS.supports("height", "100svh") + " " + CSS.supports("height", "100lvh") + " " + CSS.supports("height", "100vh"), 10, 260);
-    spctx.fillText("count/w/h: " + resizeCounter + " " + spaceCanvas.width + " " + spaceCanvas.height, 20, window.innerHeight - 50);
+    spctx.fillText("count/w/h: " + resizeCounter + " " + spaceCanvas.width + " " + spaceCanvas.height, 20, window.innerHeight - 100);
+    mutationLog.slice(-5).forEach((msg, i) => {
+        spctx.fillText(msg, 10, (window.innerHeight - 70) + i * 20);
+    });
 }
 
 let resizeCounter = 0;// DEBUG

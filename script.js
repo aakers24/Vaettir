@@ -12,6 +12,7 @@ let prevPointerY = 0;
 
 
 
+// DEBUG
 let mutationLog = [];
 const observer = new MutationObserver((mutations) => {
     mutations.forEach(m => {
@@ -42,16 +43,15 @@ function drawDocSizes(){
 
 let resizeCounter = 0;// DEBUG
 
+// / DEBUG
+
 // Dynamic canvas sizing
 function resizeCanvas() {
-    spaceCanvas.width = screen.width;
-    spaceCanvas.height = screen.height;
+    spaceCanvas.width = spaceCanvas.clientWidth;
+    spaceCanvas.height = spaceCanvas.clientHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
-
-    spctx = null;
-    spctx = spaceCanvas.getContext("2d");
 
     resizeCounter++;
 }
@@ -347,7 +347,7 @@ function render(timestamp) {
 
     update();
 
-    drawDocSizes(); // DEBUG
+    // drawDocSizes(); // DEBUG
 
     requestAnimationFrame(render);
 

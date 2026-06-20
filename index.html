@@ -1,24 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    
-    <title>V A E T T I R</title>
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-
-    <!-- Scripts -->
-    <script src="script.js" defer></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <style>
+        * { margin: 0; padding: 0; }
+        canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
-
-    <canvas id="spaceCanvas"></canvas>
-
+    <canvas id="c"></canvas>
+    <script>
+        const c = document.getElementById('c');
+        const ctx = c.getContext('2d');
+        c.width = screen.width;
+        c.height = screen.height;
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, c.width, c.height);
+    </script>
 </body>
 </html>

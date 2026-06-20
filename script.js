@@ -1,6 +1,6 @@
 // Canvas Setup
 const spaceCanvas = document.getElementById("spaceCanvas");
-const spctx = spaceCanvas.getContext("2d");
+let spctx = spaceCanvas.getContext("2d");
 let seed = seedGen();
 let screenScale = 0;
 let starDistance = 0;
@@ -49,6 +49,9 @@ function resizeCanvas() {
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
+
+    spctx = null;
+    spctx = spaceCanvas.getContext("2d");
 
     resizeCounter++;
 }

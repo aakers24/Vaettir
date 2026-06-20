@@ -13,6 +13,8 @@
     * They leave trails?
     * Make the mouse have a shooting star tail when clicking/dragging
 
+* Stars drift after an idle timer
+
 * Button to just play the game so it hides all the serious stuff and lets you try to collect all the stars
     * Could be time based and/or levels based on physics changing to make it harder.
     * Could make a leaderboard
@@ -30,7 +32,3 @@
 # Refactors and Improvements
 
 * Optimize?
-
-* Fix headers
-    * Space from eachother
-    * Positioning and/or scaling on mobile

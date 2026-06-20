@@ -11,7 +11,8 @@ let scrollPos = 0;
 let prevPointerY = 0;
 let headerSpaceX = 0;
 let headerSpaceY = 0;
-
+let fontSize = 0;
+let totalHeaders = 0;
 
 
 // Dynamic canvas sizing
@@ -21,6 +22,9 @@ function resizeCanvas() {
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
+    fontSize = Math.ceil(screenScale * 24);
+
+    // Headers
     headerSpaceX = spaceCanvas.width * .86;
     headerSpaceY = spaceCanvas.height * .86;
     headers.forEach((header) => {
@@ -219,33 +223,69 @@ function generateHeader(name, link) {
     }
     let hexName = hexArray.join("");
 
+
+
     // Generate Location
-    seed = seedGen();
-    let initX = (Math.abs(seed) % 100000 / 100000);
-    seed = seedGen();
-    let initY  = (Math.abs(seed) % 100000 / 100000);
+    let initX = -1;
+    let initY = -1;
+    let rounds = 8;
+
+    if(headers.length === 0) {
+        seed = seedGen();
+        initX = (Math.abs(seed) % 100000 / 100000);
+        seed = seedGen();
+        initY  = (((Math.abs(seed) % 100000 / 100000) % (1 / totalHeaders)));
+    } else {
+        let max = -1;
+
+        for (let i = 0; i < rounds; i++) {
+            seed = seedGen();
+            let thisX = (Math.abs(seed) % 100000 / 100000);
+            seed = seedGen();
+            let thisY = ((Math.abs(seed) % 100000 / 100000) % (1 / totalHeaders)) + ((1 / totalHeaders) * headers.length);
+            let smallestDistance = 2;
+
+            for(let h of headers) {
+                let dX = thisX - h.initX;
+                let dY = thisY - h.initY;
+                let distance = Math.sqrt((dX ** 2) + (dY ** 2));
+
+                if (distance < smallestDistance) {
+                    smallestDistance = distance;
+                }
+            }
+
+            if (smallestDistance > max) {
+                max = smallestDistance;
+                initX = thisX;
+                initY = thisY;
+            }
+        }
+    }
 
     let coords = calcHeaderLocation({name, hexName, initX, initY});
     let x = coords.x;
     let y = coords.y;
 
+
+    
     return {name, hexName, link, x, y, initX, initY};
 
 }
 
 function calcHeaderLocation(header) {
-    spctx.font = "24px 'Courier New', Courier, monospace";
-    headerWidth = spctx.measureText(header.hexName).width;
-    headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
-    headerX = header.initX * headerSpaceX;
-    headerY = header.initY * headerSpaceY;
+    spctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
+    const headerWidth = spctx.measureText(header.hexName).width;
+    const headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
+    let headerX = header.initX * headerSpaceX;
+    let headerY = header.initY * headerSpaceY;
     
-    if(headerWidth + headerX > spaceCanvas.width) {
-        headerX -= (headerWidth + headerX) - spaceCanvas.width
+    if(headerWidth + headerX > headerSpaceX) {
+        headerX -= (headerWidth + headerX) - spaceCanvas.width;
     }
-    if(headerY - headerHeight < 0) {
+    if(headerY - headerHeight < spaceCanvas.height - headerSpaceY) {
         headerY += headerHeight;
-    } else if (headerY + headerHeight > spaceCanvas.height) {
+    } else if (headerY + headerHeight > headerSpaceY) {
         headerY -= headerHeight;
     }
     
@@ -259,16 +299,14 @@ function calcHeaderLocation(header) {
 
 function drawHeaders(){
     headers.forEach((header) => {
-        spctx.font = "24px 'Courier New', Courier, monospace";
+        spctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
         spctx.fillStyle = "rgb(216, 216, 216)";
 
-        headerWidth = spctx.measureText(header.hexName).width;
-        headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
+        const headerWidth = spctx.measureText(header.hexName).width;
+        const headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
 
-        headerX = header.x;
-        headery = header.y;
-
-        // console.log(header); // DEBUG
+        let headerX = header.x;
+        let headerY = header.y;
 
         for(let i = 0; i < header.name.length; i++) {
             let plainChunk = header.name[i];
@@ -552,8 +590,11 @@ resizeCanvas();
 generateStars(12);
 
 // DEFINE HARDCODED HEADERS
+totalHeaders = 4;
 headers.push(generateHeader("Vaettir", "EotN"));
-// headers.push(generateHeader("Vaettir2", "EotN"));
+headers.push(generateHeader("Vaettir2", "EotN"));
+headers.push(generateHeader("Vaettir3", "EotN"));
+headers.push(generateHeader("Vaettir4", "EotN"));
 
 // Reload/resize for mobile
 window.addEventListener("DOMContentLoaded", () => {

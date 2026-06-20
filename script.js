@@ -15,13 +15,15 @@ let prevPointerY = 0;
 function drawDocSizes(){
     spctx.font = "20px 'Courier New', Courier, monospace";
     spctx.fillStyle = "rgb(240, 240, 240)";
-    spctx.fillText(spaceCanvas.getBoundingClientRect().width + " " + spaceCanvas.getBoundingClientRect().height, 10, 100);
+    spctx.fillText(spaceCanvas.clientWidth + " " + spaceCanvas.clientHeight, 10, 100);
     spctx.fillText(window.innerWidth + " " + window.innerHeight, 10, 120);
-    spctx.fillText(document.documentElement.clientWidth + " " + document.documentElement.clientHeight, 10, 140);
-    spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 180);
-    spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 200);
-    spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 220);
-    spctx.fillText(window.outerWidth + " " + window.outerHeight, 10, 240);
+    spctx.fillText(window.outerWidth + " " + window.outerHeight, 10, 140);
+    spctx.fillText(screen.width + " " + screen.height, 10, 160);
+    spctx.fillText(document.documentElement.clientWidth + " " + document.documentElement.clientHeight, 10, 180);
+    spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 200);
+    spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 220);
+    spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 240);
+    spctx.fillText(CSS.supports("height", "100dvh") + " " + CSS.supports("height", "100svh") + " " + CSS.supports("height", "100lvh") + " " + CSS.supports("height", "100vh"), 10, 260);
 }
 
 

@@ -1,7 +1,6 @@
 // Canvas Setup
 const spaceCanvas = document.getElementById("spaceCanvas");
 const spctx = spaceCanvas.getContext("2d");
-//spctx.font = "32px 'Courier New', Courier, monospace";
 let seed = seedGen();
 let screenScale = 0;
 let starDistance = 0;
@@ -11,10 +10,7 @@ let scrolling = 0;
 let scrollPos = 0;
 let prevPointerY = 0;
 
-// For mobile touch behaviour
-// spaceCanvas.style.touchAction = "pan-x pan-y";
-// spaceCanvas.style.userSelect = "none";
-// spaceCanvas.style.webkitUserSelect = "none";
+
 
 function drawDocSizes(){
     spctx.font = "20px 'Courier New', Courier, monospace";
@@ -28,25 +24,12 @@ function drawDocSizes(){
     spctx.fillText(window.outerWidth + " " + window.outerHeight, 10, 240);
 }
 
+
+
 // Dynamic canvas sizing
 function resizeCanvas() {
-    console.log(spaceCanvas.getBoundingClientRect()); // DEBUG
-    console.log(window.innerWidth, window.innerHeight); // DEBUG
-    console.log(spaceCanvas.width, spaceCanvas.height);
-    console.log(spaceCanvas.style.width, spaceCanvas.style.height);
-    console.log(
-        document.documentElement.clientWidth, document.documentElement.clientHeight
-    ); // DEBUG
-
-    console.log(
-        window.visualViewport?.width + " " + window.visualViewport?.height
-    ); // DEBUG
-
-
-
-    const canvasBoundingBox = spaceCanvas.getBoundingClientRect();
-    spaceCanvas.width = window.outerWidth;
-    spaceCanvas.height = window.outerHeight;
+    spaceCanvas.width = window.innerWidth;
+    spaceCanvas.height = window.innerHeight;
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
@@ -244,7 +227,7 @@ function generateHeader(name, link) {
 }
 
 // DEFINE HARDCODED HEADERS
-headers.push(generateHeader("Vaettir7", "EotN"));
+headers.push(generateHeader("Vaettir", "EotN"));
 
 function drawHeaders(){
     headers.forEach((header) => {

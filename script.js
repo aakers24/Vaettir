@@ -12,39 +12,6 @@ let prevPointerY = 0;
 
 
 
-// DEBUG
-let mutationLog = [];
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach(m => {
-        mutationLog.push(`mutation: ${m.attributeName} w:${spaceCanvas.width} h:${spaceCanvas.height}`);
-    });
-});
-observer.observe(spaceCanvas, { attributes: true });
-
-function drawDocSizes(){
-    spctx.font = "20px 'Courier New', Courier, monospace";
-    spctx.fillStyle = "red";
-    spctx.fillRect(0, spaceCanvas.height - 50, spaceCanvas.width, 50);
-    spctx.fillStyle = "rgb(240, 240, 240)";
-    spctx.fillText(spaceCanvas.clientWidth + " " + spaceCanvas.clientHeight, 10, 100);
-    spctx.fillText(window.innerWidth + " " + window.innerHeight, 10, 120);
-    spctx.fillText(window.outerWidth + " " + window.outerHeight, 10, 140);
-    spctx.fillText(screen.width + " " + screen.height, 10, 160);
-    spctx.fillText(document.documentElement.clientWidth + " " + document.documentElement.clientHeight, 10, 180);
-    spctx.fillText(window.visualViewport?.width + " " + window.visualViewport?.height, 10, 200);
-    spctx.fillText(spaceCanvas.width + " " + spaceCanvas.height, 10, 220);
-    spctx.fillText(spaceCanvas.style.width + " " + spaceCanvas.style.height, 10, 240);
-    spctx.fillText(CSS.supports("height", "100dvh") + " " + CSS.supports("height", "100svh") + " " + CSS.supports("height", "100lvh") + " " + CSS.supports("height", "100vh"), 10, 260);
-    spctx.fillText("count/w/h: " + resizeCounter + " " + spaceCanvas.width + " " + spaceCanvas.height, 20, window.innerHeight - 100);
-    mutationLog.slice(-5).forEach((msg, i) => {
-        spctx.fillText(msg, 10, (window.innerHeight - 70) + i * 20);
-    });
-}
-
-let resizeCounter = 0;// DEBUG
-
-// / DEBUG
-
 // Dynamic canvas sizing
 function resizeCanvas() {
     spaceCanvas.width = spaceCanvas.clientWidth;
@@ -52,8 +19,6 @@ function resizeCanvas() {
     screenScale = Math.max(.64, Math.min(spaceCanvas.width / 2048, 1.16));
     starDistance = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
     pointer.influenceRadius = spaceCanvas.width > spaceCanvas.height ? screenScale * spaceCanvas.width / 8 : screenScale * spaceCanvas.height / 8;
-
-    resizeCounter++;
 }
 
 // Dynamic canvas resizing
@@ -347,8 +312,6 @@ function render(timestamp) {
 
     update();
 
-    // drawDocSizes(); // DEBUG
-
     requestAnimationFrame(render);
 
     // DEBUG limit frames to Iterations variable #
@@ -528,6 +491,20 @@ function scrollStarInteract() {
 
 
 
+// Mobile
+spaceCanvas.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+
+
 // SETUP CODE
 resizeCanvas(); // Initalization resize event
 generateStars(12);
+// Reload/time for mobile
+window.addEventListener("DOMContentLoaded", () => {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            resizeCanvas();
+        });
+    });
+});

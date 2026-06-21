@@ -31,3 +31,4 @@
 # Refactors and Improvements
 
 * Optimize?
+    * Continually check in on this

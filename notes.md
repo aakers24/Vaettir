@@ -9,8 +9,7 @@
 
 * Black hole mouse - Gravitational distortion around the mouse? (Whether or not there is an actual black hole icon. Maybe even no mouse at all or just a crosshair?)
 
-* Shooting stars - possibly that also glitch around them or otherwise interact
-    * They leave trails?
+* Shooting stars - possibly glitch around them or otherwise interact
     * Make the mouse have a shooting star tail when clicking/dragging
 
 * Stars drift after an idle timer

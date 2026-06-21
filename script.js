@@ -88,7 +88,7 @@ function generateStars(numStars) {
     }
 
     // Class D stars
-    for (let i = 1; i < numStars * 400 + 1; i++) {
+    for (let i = 1; i < numStars * 256 + 1; i++) {
         seed = seedGen();
         let x = Math.abs(seed) % 100000 / 100000;
         seed = seedGen();
@@ -203,6 +203,84 @@ function drawSpace() {
 
 
 
+// Shooting stars
+const shootingStars = new Set();
+function generateShootingStar(){
+    seed = seedGen();
+    let start = Math.abs(seed) % 100000 / 100000;
+    seed = seedGen();
+    let dX = (Math.abs(seed) % 100000 / 100000) % .01;
+    seed = seedGen();
+    let dY = (Math.abs(seed) % 100000 / 100000) % .01;
+    let x = 0;
+    let y = 0;
+
+    if(start < .25) {
+        seed = seedGen();
+        x = (Math.abs(seed) % 100000 / 100000);
+
+        dY = dY > 0 ? dY : -dY;
+    } else if(start >= .25 && start < .5) {
+        seed = seedGen();
+        x = 1;
+        y = (Math.abs(seed) % 100000 / 100000);
+
+        dX = dX > 0 ? -dX : dX;
+    } else if(start >= .5 && start < .75 ) {
+        seed = seedGen();
+        x = (Math.abs(seed) % 100000 / 100000);
+        y = 1;
+
+        dY = dY > 0 ? -dY : dY;
+    } else {
+        seed = seedGen();
+        y = (Math.abs(seed) % 100000 / 100000);
+
+        dX = dX > 0 ? dX : -dX;
+    }
+
+    shootingStars.add({x, y, dX, dY});
+}
+
+function drawShootingStars() {
+    shootingStars.forEach((star) => {
+        // Draw the star
+        let vel = Math.max(star.dX, star.dY);
+        let brightness = Math.floor(Math.abs(vel * 100 * 256));
+        let brightnessHex = brightness.toString(16);
+        let screenX = star.x * spaceCanvas.width;
+        let screenY = star.y * spaceCanvas.height;
+        let trailLength = 16;
+        let trailX = star.dX * spaceCanvas.width * trailLength;
+        let trailY = star.dY * spaceCanvas.height * trailLength;
+
+        // spctx.fillStyle = `#${brightnessHex}${brightnessHex}${brightnessHex}`;
+        // spctx.beginPath();
+        // spctx.arc(screenX, screenY, screenScale * 4, 0, Math.PI * 2);
+        // spctx.fill();
+
+        // Draw the trail
+        spctx.beginPath();
+        spctx.moveTo(screenX, screenY);
+        spctx.lineTo((screenX - trailX), (screenY - trailY));
+        let trail = spctx.createLinearGradient(screenX, screenY, trailX, trailY);
+        trail.addColorStop(1, `#${brightnessHex}${brightnessHex}${brightnessHex}`);
+        trail.addColorStop(0, `#${brightnessHex}${brightnessHex}${brightnessHex}${brightnessHex}`);
+        spctx.strokeStyle = trail;
+        spctx.lineWidth = screenScale * 4;
+        spctx.stroke();
+
+        // Update the star
+        star.x += star.dX;
+        star.y += star.dY;
+        if(star.x < -.16 || star.x > 1.16 || star.y < -.16 || star.y > 1.16) {
+            shootingStars.delete(star);
+        }
+    });
+}
+
+
+
 // Generate Headers
 const headers = [];
 function generateHeader(name, link) {
@@ -268,7 +346,7 @@ function generateHeader(name, link) {
     let y = coords.y;
 
 
-    
+
     return {name, hexName, link, x, y, initX, initY};
 
 }
@@ -378,6 +456,10 @@ function update() {
         scrollStarInteract();
         scrolling = Math.max(0, Math.floor(scrolling / 2));
     }
+
+    seed = seedGen();
+    let newShootingStar = ((seed % 100000) / 100000) > .99936 ? 1 : 0;
+    if(newShootingStar === 1) generateShootingStar();
 }
 
 
@@ -387,6 +469,8 @@ function render(timestamp) {
     spctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
 
     drawSpace();
+
+    drawShootingStars();
 
     drawHeaders();
     

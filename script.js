@@ -254,11 +254,6 @@ function drawShootingStars() {
         let trailX = star.dX * spaceCanvas.width * trailLength;
         let trailY = star.dY * spaceCanvas.height * trailLength;
 
-        // spctx.fillStyle = `#${brightnessHex}${brightnessHex}${brightnessHex}`;
-        // spctx.beginPath();
-        // spctx.arc(screenX, screenY, screenScale * 4, 0, Math.PI * 2);
-        // spctx.fill();
-
         // Draw the trail
         spctx.beginPath();
         spctx.moveTo(screenX, screenY);
@@ -307,8 +302,27 @@ function generateHeader(name, link) {
     let initX = -1;
     let initY = -1;
     let rounds = 8;
+    let numHeaders = 0;
+    let found = 0;
 
-    if(headers.length === 0) {
+    if(name === "VAETTIR" && headers.length === 0) {
+        initX = .5;
+        initY = .5;
+
+        let coords = calcHeaderLocation({name, hexName, initX, initY});
+        let x = coords.x;
+        let y = coords.y;
+
+        return {name, hexName, link, x, y, initX, initY};
+    }
+
+    try {
+        numHeaders = headers[0].name === "VAETTIR" ? headers.length - 1 : headers.length;
+    } catch {
+
+    }
+
+    if(numHeaders === 0) {
         seed = seedGen();
         initX = (Math.abs(seed) % 100000 / 100000);
         seed = seedGen();
@@ -316,27 +330,33 @@ function generateHeader(name, link) {
     } else {
         let max = -1;
 
-        for (let i = 0; i < rounds; i++) {
-            seed = seedGen();
-            let thisX = (Math.abs(seed) % 100000 / 100000);
-            seed = seedGen();
-            let thisY = ((Math.abs(seed) % 100000 / 100000) % (1 / totalHeaders)) + ((1 / totalHeaders) * headers.length);
-            let smallestDistance = 2;
-
-            for(let h of headers) {
-                let dX = thisX - h.initX;
-                let dY = thisY - h.initY;
-                let distance = Math.sqrt((dX ** 2) + (dY ** 2));
-
-                if (distance < smallestDistance) {
-                    smallestDistance = distance;
+        while(found === 0) {
+            for (let i = 0; i < rounds; i++) {
+                seed = seedGen();
+                let thisX = (Math.abs(seed) % 100000 / 100000);
+                seed = seedGen();
+                let thisY = ((Math.abs(seed) % 100000 / 100000) % (1 / totalHeaders)) + ((1 / totalHeaders) * numHeaders);
+                if(thisY > .4 && thisY < .6) { // Within a distance from the center of the height so too close to Vaettir title header
+                    continue;
                 }
-            }
+                let smallestDistance = 2;
 
-            if (smallestDistance > max) {
-                max = smallestDistance;
-                initX = thisX;
-                initY = thisY;
+                for(let h of headers) {
+                    let dX = thisX - h.initX;
+                    let dY = thisY - h.initY;
+                    let distance = Math.sqrt((dX ** 2) + (dY ** 2));
+
+                    if (distance < smallestDistance) {
+                        smallestDistance = distance;
+                    }
+                }
+
+                if (smallestDistance > max) {
+                    max = smallestDistance;
+                    initX = thisX;
+                    initY = thisY;
+                }
+                found = 1;
             }
         }
     }
@@ -357,6 +377,12 @@ function calcHeaderLocation(header) {
     const headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
     let headerX = header.initX * headerSpaceX;
     let headerY = header.initY * headerSpaceY;
+
+    if(header.name === "VAETTIR") {
+        x = (header.initX * spaceCanvas.width) - ((spctx.measureText("V   A   E   T   T   I   R").width) / 2);
+        y = (header.initY * spaceCanvas.height) - ((spctx.measureText("V   A   E   T   T   I   R").actualBoundingBoxAscent) / 2);
+        return {x, y};
+    }
     
     if(headerWidth + headerX > headerSpaceX) {
         headerX -= (headerWidth + headerX) - spaceCanvas.width;
@@ -386,6 +412,10 @@ function drawHeaders(){
         let headerX = header.x;
         let headerY = header.y;
 
+        if(header.name === "VAETTIR") {
+            spctx.fillText("V   A   E   T   T   I   R", headerX, headerY);
+        }
+
         for(let i = 0; i < header.name.length; i++) {
             let plainChunk = header.name[i];
 
@@ -395,7 +425,10 @@ function drawHeaders(){
             let chunkPosX = headerX + (chunkWidth * i) + (chunkWidth / 2);
             let distance = Math.sqrt(((pointer.x - chunkPosX) ** 2) + ((pointer.y - headerY) ** 2));
 
-
+            // Always print VAETTIR in plaintext
+            if(header.name === "VAETTIR") {
+                continue;
+            }
 
             // Decrypt from scrolling
             let scrollPage = Math.abs(Math.floor(scrollPos / spaceCanvas.height));
@@ -505,7 +538,6 @@ const pointer = {
 const activePointers = [];
 
 function mouseStarInteract() {
-    //console.log(pointer.x, pointer.y); // DEBUG
     connectionStars.forEach(star => {
         let starScreenX = star.x * spaceCanvas.width;
         let starScreenY = star.y * spaceCanvas.height;
@@ -666,6 +698,23 @@ screen.orientation.addEventListener("change", resizeCanvas);
 
 
 
+// Dynamic HTML
+const overlay = document.getElementById("overlayBackground");
+const close = document.getElementById("close");
+
+function openPage() {
+    overlay.classList.add("active");
+}
+
+function closePage() {
+    overlay.classList.remove("active");
+    console.log("close"); // DEBUG
+}
+
+close.addEventListener("click", closePage);
+
+
+
 // -------- SETUP CODE --------
 
 // Initalization resize event
@@ -675,11 +724,11 @@ resizeCanvas();
 generateStars(12);
 
 // DEFINE HARDCODED HEADERS
-totalHeaders = 4;
-headers.push(generateHeader("Vaettir", "EotN"));
-headers.push(generateHeader("Vaettir2", "EotN"));
-headers.push(generateHeader("Vaettir3", "EotN"));
-headers.push(generateHeader("Vaettir4", "EotN"));
+totalHeaders = 4 - 1; // Don't count Vaettir
+headers.push(generateHeader("Vaettir", "Home"));
+headers.push(generateHeader("Tech", "tech"));
+headers.push(generateHeader("Music", "music"));
+headers.push(generateHeader("Art", "art"));
 
 // Reload/resize for mobile
 window.addEventListener("DOMContentLoaded", () => {

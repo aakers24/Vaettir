@@ -25,3 +25,55 @@ canvas {
     user-select: none;
     -webkit-user-select: none;
 }
+
+#overlayBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #88888888;
+    z-index: 1;
+
+    /* Hidden */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#close {
+    all: unset;
+    font-family: "Courier New", Courier, monospace;
+    /* background-color: #070414; */
+    color: #AAAAAA;
+    position: absolute;
+    top: 4%;
+    right: 5%;
+    z-index: 3;
+}
+
+.page {
+    position: absolute;
+    top: 2%;
+    left: 4%;
+    width: 92%;
+    height: 96%;
+    background-color: #44444488;
+    z-index: 2;
+
+    /* Hidden */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* #tech, #music, #art {
+    
+} */

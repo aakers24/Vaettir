@@ -2,22 +2,24 @@
 
 * Cellular automata Logo
 
-* Possibly some sort of glitch effects
+* Glitch effects
 
 * Add a WebGL version (or something- not sure on the details) that loads and does more 3D stuff
     * Nebulae and/or planets - WebGL might be necessary for my desired effect
 
-* Black hole mouse - Gravitational distortion around the mouse? (Whether or not there is an actual black hole icon. Maybe even no mouse at all or just a crosshair?)
+* Make the mouse have a shooting star tail or other animation when clicking/dragging?
+    * Black hole mouse - Gravitational distortion around the mouse?
 
-* Shooting stars - possibly glitch around them or otherwise interact
-    * Make the mouse have a shooting star tail when clicking/dragging
-
-* Stars drift after an idle timer
+* Stars drift
+    * After an idle timer, on/off button, etc
 
 * Button to just play the game so it hides all the serious stuff and lets you try to collect all the stars
     * Could be time based and/or levels based on physics changing to make it harder.
     * Could make a leaderboard
     * Space warp travel animation into game?
+
+* Make a few different small ambient tracks to play randomly if the user turns on the play button before choosing another song
+    * Add them to the playlist of songs as options
 
 ## Core features to implement
 
@@ -26,9 +28,17 @@
 
 * Music interacts with stars/background
 
+* Vaettir as central, always decrypted header?
+    * Added first. If header.name === vaettir draw middle, etc.
+
+* Arrow button in the bottom left(?) that you click/press to open and see the other buttons (Play/Pause music, volume, stop animations(?) / star drift on/off, REFRESH!/reload/home, game mode, etc.)
+    * When pressed the button itself moves to the right to be on the other side of the bar that slides out and swaps directions from > to < so it cane hide it again
+
 ---
 
 # Refactors and Improvements
 
 * Optimize?
     * Continually check in on this
+
+* Pages in progress

@@ -662,6 +662,7 @@ function scrollStarInteract() {
 // Mobile
 spaceCanvas.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("contextmenu", e => e.preventDefault());
+screen.orientation.addEventListener("change", resizeCanvas);
 
 
 

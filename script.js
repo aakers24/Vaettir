@@ -41,6 +41,16 @@ window.addEventListener("resize", resizeCanvas);
 
 
 
+// Dynamic HTML Elements
+const overlay = document.getElementById("overlayBackground");
+const close = document.querySelectorAll(".closeBtn");
+const pages = document.querySelectorAll(".page");
+const tech = document.getElementById("tech");
+const art = document.getElementById("art");
+const music = document.getElementById("music");
+
+
+
 // Procedural Randomness Generator
 function seedGen() {
 return (Math.random() * Math.random() * 8821 * 43481 * 51659 * 73476511) % Number.MAX_SAFE_INTEGER;
@@ -365,9 +375,12 @@ function generateHeader(name, link) {
     let x = coords.x;
     let y = coords.y;
 
+    let textX = x + spctx.measureText(hexName).width;
+    let textY = y + spctx.measureText(hexName).actualBoundingBoxAscent;
 
 
-    return {name, hexName, link, x, y, initX, initY};
+
+    return {name, hexName, link, x, y, initX, initY, textX, textY};
 
 }
 
@@ -627,6 +640,27 @@ spaceCanvas.addEventListener("pointerdown", (event) => {
 
     prevPointerY = event.clientY;
     activePointers.push(1);
+
+    // Headers
+    headers.forEach(header => {
+        let xHit = event.clientX > header.x && event.clientX < header.textX ? 1 : 0;
+        let yHit = event.clientY > header.y && event.clientY < header.textY ? 1 : 0;
+        if(xHit === 1 && yHit === 1) {
+            switch(header.name) {
+                case "TECH":
+                    openPage(tech);
+                    break;
+                case "ART":
+                    openPage(art);
+                    break;
+                case "MUSIC":
+                    openPage(music);
+                    break;
+                default:
+                    break;
+            }
+        }
+    });
 });
 
 spaceCanvas.addEventListener("pointerup", (event) => {
@@ -699,19 +733,23 @@ screen.orientation.addEventListener("change", resizeCanvas);
 
 
 // Dynamic HTML
-const overlay = document.getElementById("overlayBackground");
-const close = document.getElementById("close");
 
-function openPage() {
+function openPage(elem) {
     overlay.classList.add("active");
+    elem.classList.add("active");
 }
 
 function closePage() {
     overlay.classList.remove("active");
-    console.log("close"); // DEBUG
+    pages.forEach(page => {
+        page.classList.remove("active");
+    });
 }
 
-close.addEventListener("click", closePage);
+// close.addEventListener("click", closePage);
+close.forEach(btn => {
+    btn.addEventListener("click", closePage);
+});
 
 
 

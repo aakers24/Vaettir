@@ -7,6 +7,9 @@ html, body {
     background-color: #070414;
     /* background-color: #AAAAAA; */
 
+    font-family: "Courier New", Courier, monospace;
+    /* color: #AAAAAA; */
+
     cursor: url("assets/cursor.png") 32 32, none;
 
     touch-action: none;
@@ -26,22 +29,51 @@ canvas {
     -webkit-user-select: none;
 }
 
+
+
+/* DYNAMIC HTML */
+
 #overlayBackground {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #88888888;
+    background-color: #888888AA;
     z-index: 1;
 
     /* Hidden */
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.64s ease;
 }
 
-#close {
+.page {
+    position: absolute;
+    top: 2%;
+    left: 4%;
+    width: 92%;
+    height: 96%;
+    background-color: #444444DD;
+    z-index: 2;
+
+    text-align: center;
+
+    /* Hidden */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: transform 1s cubic-bezier(0.32, 0.64, 0.32, 1), opacity 0.64s ease;
+}
+
+/* Unhidden */
+#overlayBackground.active, .page.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#close, .closeBtn {
     all: unset;
     font-family: "Courier New", Courier, monospace;
     /* background-color: #070414; */
@@ -51,29 +83,3 @@ canvas {
     right: 5%;
     z-index: 3;
 }
-
-.page {
-    position: absolute;
-    top: 2%;
-    left: 4%;
-    width: 92%;
-    height: 96%;
-    background-color: #44444488;
-    z-index: 2;
-
-    /* Hidden */
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-100%);
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
-
-/* #tech, #music, #art {
-    
-} */

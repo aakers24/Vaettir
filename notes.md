@@ -40,5 +40,11 @@
 
 * Optimize?
     * Continually check in on this
+    * Further abstract the Dynamic HTML and/or headers (?)
 
 * Pages in progress
+    * Adjust header click collisions!
+    * Enable content scrolling within the pages
+    * Import/add content to pages
+
+* Improve readability of headers on top of stars/constellations

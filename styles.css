@@ -50,14 +50,16 @@ canvas {
 
 .page {
     position: absolute;
-    top: 2%;
+    top: 4%;
     left: 4%;
     width: 92%;
-    height: 96%;
+    height: 92%;
     background-color: #444444DD;
     z-index: 2;
 
     text-align: center;
+
+    overflow: auto;
 
     /* Hidden */
     opacity: 0;
@@ -82,4 +84,30 @@ canvas {
     top: 4%;
     right: 5%;
     z-index: 3;
+}
+
+
+
+/* ART */
+
+#photos {
+    width: 100%;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    text-align: center;
+}
+
+#photography {
+    margin: 1%;
+}
+
+#thePics img, #theRenders img {
+    /* width: 40%;  */
+    /* height: 350px; */
+    margin: .5%;
+    margin-top: .32%;
+    margin-bottom: .32%;
+    width: 48%; 
+    height: 420px;
+    object-fit: cover;
 }

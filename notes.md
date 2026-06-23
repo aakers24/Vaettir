@@ -21,6 +21,10 @@
 * Make a few different small ambient tracks to play randomly if the user turns on the play button before choosing another song
     * Add them to the playlist of songs as options
 
+* Screen saver mode!!!
+    * No headers, just full screen star beautifulness, and maybe star drift.
+    * Hide the popout menu arrow button if no input for a short time so it's really just the stars
+
 ## Core features to implement
 
 * Pages for Bio, Certs/Education, Projects, Art, Music, etc.
@@ -31,7 +35,7 @@
 * Vaettir as central, always decrypted header?
     * Added first. If header.name === vaettir draw middle, etc.
 
-* Arrow button in the bottom left(?) that you click/press to open and see the other buttons (Play/Pause music, volume, stop animations(?) / star drift on/off, REFRESH!/reload/home, game mode, etc.)
+* Arrow button in the bottom left(?) that you click/press to open and see the other buttons (Play/Pause music, volume, stop animations(?) / star drift on/off, REFRESH!/reload/home, game mode, Screen saver mode!!!, etc.)
     * When pressed the button itself moves to the right to be on the other side of the bar that slides out and swaps directions from > to < so it cane hide it again
 
 ---
@@ -42,9 +46,14 @@
     * Continually check in on this
     * Further abstract the Dynamic HTML and/or headers (?)
 
-* Pages in progress
+* Shuffle the headers within the header structure so they're in a random order?
+
+* Pages in progress!!!
     * Adjust header click collisions!
-    * Enable content scrolling within the pages
     * Import/add content to pages
+    * Fix photos
+        * Orientation on mobile
 
 * Improve readability of headers on top of stars/constellations
+
+* Make headers not render when pages are open

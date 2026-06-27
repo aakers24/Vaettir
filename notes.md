@@ -54,6 +54,4 @@
     * Fix photos
         * Orientation on mobile
 
-* Improve readability of headers on top of stars/constellations
-
-* Make headers not render when pages are open
+* Fix edge detection for headers - calcHeaderLocation

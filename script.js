@@ -13,6 +13,7 @@ let headerSpaceX = 0;
 let headerSpaceY = 0;
 let fontSize = 0;
 let totalHeaders = 0;
+let pageIsOpen = 0;
 
 
 // Dynamic canvas sizing
@@ -29,10 +30,10 @@ function resizeCanvas() {
     headerSpaceY = spaceCanvas.height * .86;
     headers.forEach((header) => {
         let coords = calcHeaderLocation(header);
-        let x = coords.x;
-        let y = coords.y;
-        header.x = x;
-        header.y = y;
+        header.x = coords.x;
+        header.y = coords.y;
+        header.textX = coords.textX;
+        header.textY = coords.textY;
     });
 }
 
@@ -323,7 +324,10 @@ function generateHeader(name, link) {
         let x = coords.x;
         let y = coords.y;
 
-        return {name, hexName, link, x, y, initX, initY};
+        let textX = spctx.measureText("V   A   E   T   T   I   R").width;
+        let textY = y - spctx.measureText("V   A   E   T   T   I   R").actualBoundingBoxAscent;
+
+        return {name, hexName, link, x, y, initX, initY, textX, textY};
     }
 
     try {
@@ -375,8 +379,8 @@ function generateHeader(name, link) {
     let x = coords.x;
     let y = coords.y;
 
-    let textX = x + spctx.measureText(hexName).width;
-    let textY = y + spctx.measureText(hexName).actualBoundingBoxAscent;
+    let textX = spctx.measureText(hexName).width;
+    let textY = y - spctx.measureText(hexName).actualBoundingBoxAscent;
 
 
 
@@ -392,9 +396,11 @@ function calcHeaderLocation(header) {
     let headerY = header.initY * headerSpaceY;
 
     if(header.name === "VAETTIR") {
-        x = (header.initX * spaceCanvas.width) - ((spctx.measureText("V   A   E   T   T   I   R").width) / 2);
-        y = (header.initY * spaceCanvas.height) - ((spctx.measureText("V   A   E   T   T   I   R").actualBoundingBoxAscent) / 2);
-        return {x, y};
+        let x = (header.initX * spaceCanvas.width) - ((spctx.measureText("V   A   E   T   T   I   R").width) / 2);
+        let y = (header.initY * spaceCanvas.height) - ((spctx.measureText("V   A   E   T   T   I   R").actualBoundingBoxAscent) / 2);
+        let textX = spctx.measureText("V   A   E   T   T   I   R").width;
+        let textY = y - spctx.measureText("V   A   E   T   T   I   R").actualBoundingBoxAscent;
+        return {x, y, textX, textY};
     }
     
     if(headerWidth + headerX > headerSpaceX) {
@@ -406,15 +412,18 @@ function calcHeaderLocation(header) {
         headerY -= headerHeight;
     }
     
-    x = headerX;
-    y = headerY;
+    let x = headerX;
+    let y = headerY;
+    let textX = spctx.measureText(header.hexName).width;
+    let textY = y - spctx.measureText(header.hexName).actualBoundingBoxAscent;
 
-    return {x, y};
+    return {x, y, textX, textY};
 }
 
 
 
 function drawHeaders(){
+    if(pageIsOpen) return;
     headers.forEach((header) => {
         spctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
         spctx.fillStyle = "rgb(216, 216, 216)";
@@ -426,22 +435,41 @@ function drawHeaders(){
         let headerY = header.y;
 
         if(header.name === "VAETTIR") {
+            spctx.fillStyle = "#07041444";
+            spctx.fillRect(header.x - (header.textX * .16), header.textY - (headerHeight * 1.16), header.textX + ((header.textX * .16) * 2), headerHeight + ((headerHeight * 1.16) * 2));
+            spctx.fillStyle = "rgb(216, 216, 216)";
             spctx.fillText("V   A   E   T   T   I   R", headerX, headerY);
         }
 
         for(let i = 0; i < header.name.length; i++) {
             let plainChunk = header.name[i];
 
-            let hexChunk = header.hexName.substring(i * 3, (i * 3) + 3);
+            let hexChunk = header.hexName.substring(i * 4, (i * 4) + 4);
 
             let chunkWidth = spctx.measureText(hexChunk).width;
             let chunkPosX = headerX + (chunkWidth * i) + (chunkWidth / 2);
             let distance = Math.sqrt(((pointer.x - chunkPosX) ** 2) + ((pointer.y - headerY) ** 2));
 
+
+
             // Always print VAETTIR in plaintext
             if(header.name === "VAETTIR") {
                 continue;
             }
+
+
+
+            // Background
+            spctx.fillStyle = "#07041444";
+            if(i === 0) {
+                spctx.fillRect(chunkPosX - ((chunkWidth / 2) * 2), header.textY - (headerHeight * 1.16), chunkWidth / 2, headerHeight + ((headerHeight * 1.16) * 2));
+            } else if(i + 1 === header.name.length) {
+                spctx.fillRect(chunkPosX + (chunkWidth / 2), header.textY - (headerHeight * 1.16), chunkWidth / 2, headerHeight + ((headerHeight * 1.16) * 2));
+            }
+            spctx.fillRect(chunkPosX - (chunkWidth / 2), header.textY - (headerHeight * 1.16), chunkWidth, headerHeight + ((headerHeight * 1.16) * 2));
+            spctx.fillStyle = "rgb(216, 216, 216)";
+
+
 
             // Decrypt from scrolling
             let scrollPage = Math.abs(Math.floor(scrollPos / spaceCanvas.height));
@@ -643,8 +671,8 @@ spaceCanvas.addEventListener("pointerdown", (event) => {
 
     // Headers
     headers.forEach(header => {
-        let xHit = event.clientX > header.x && event.clientX < header.textX ? 1 : 0;
-        let yHit = event.clientY > header.y && event.clientY < header.textY ? 1 : 0;
+        let xHit = event.clientX > header.x && event.clientX < (header.textX + header.x) ? 1 : 0;
+        let yHit = event.clientY > header.textY && event.clientY < header.y ? 1 : 0;
         if(xHit === 1 && yHit === 1) {
             switch(header.name) {
                 case "TECH":
@@ -737,6 +765,7 @@ screen.orientation.addEventListener("change", resizeCanvas);
 function openPage(elem) {
     overlay.classList.add("active");
     elem.classList.add("active");
+    pageIsOpen = 1;
 }
 
 function closePage() {
@@ -744,6 +773,7 @@ function closePage() {
     pages.forEach(page => {
         page.classList.remove("active");
     });
+    pageIsOpen = 0;
 }
 
 // close.addEventListener("click", closePage);

@@ -27,13 +27,7 @@
 
 ## Core features to implement
 
-* Pages for Bio, Certs/Education, Projects, Art, Music, etc.
-    * Semi-opaque dropdown/modal/overlay that holds the content of the "pages" while still showing the background partially
-
 * Music interacts with stars/background
-
-* Vaettir as central, always decrypted header?
-    * Added first. If header.name === vaettir draw middle, etc.
 
 * Arrow button in the bottom left(?) that you click/press to open and see the other buttons (Play/Pause music, volume, stop animations(?) / star drift on/off, REFRESH!/reload/home, game mode, Screen saver mode!!!, etc.)
     * When pressed the button itself moves to the right to be on the other side of the bar that slides out and swaps directions from > to < so it cane hide it again
@@ -46,12 +40,10 @@
     * Continually check in on this
     * Further abstract the Dynamic HTML and/or headers (?)
 
-* Shuffle the headers within the header structure so they're in a random order?
+* Headers
+    * Shuffle the headers within the header structure so they're in a random order?
+    * Maybe remove header backgrounds for aesthetics?
+        * Improve readability if needed afterwards
 
 * Pages in progress!!!
-    * Adjust header click collisions!
     * Import/add content to pages
-    * Fix photos
-        * Orientation on mobile
-
-* Fix edge detection for headers - calcHeaderLocation

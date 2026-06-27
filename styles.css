@@ -12,6 +12,9 @@ html, body {
 
     cursor: url("assets/cursor.png") 32 32, none;
 
+    /* -webkit-user-drag: none;
+    user-drag: none; */
+
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
@@ -27,6 +30,18 @@ canvas {
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+
+    cursor: inherit;
+}
+
+.highlightable {
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 
@@ -54,7 +69,8 @@ canvas {
     left: 4%;
     width: 92%;
     height: 92%;
-    background-color: #444444DD;
+    /* background-color: #444444DD; */
+    background-color: #CCCCCCDD;
     z-index: 2;
 
     text-align: center;
@@ -79,13 +95,37 @@ canvas {
     all: unset;
     font-family: "Courier New", Courier, monospace;
     /* background-color: #070414; */
-    color: #AAAAAA;
+    /* color: #AAAAAA; */
+    color: #070414;
     position: absolute;
     top: 4%;
     right: 5%;
     z-index: 3;
 }
 
+hr {
+    margin-left: 4%;
+    margin-right: 4%;
+}
+
+
+
+/* TECH */
+
+#contact p {
+    display: inline;
+}
+
+#certs img, #events img {
+    /* width: 40%;  */
+    /* height: 350px; */
+    margin: .32%;
+    margin-top: .32%;
+    margin-bottom: .32%;
+    width: 48%; 
+    /* height: 420px; */
+    object-fit: contain;
+}
 
 
 /* ART */
@@ -104,7 +144,7 @@ canvas {
 #thePics img, #theRenders img {
     /* width: 40%;  */
     /* height: 350px; */
-    margin: .5%;
+    margin: .32%;
     margin-top: .32%;
     margin-bottom: .32%;
     width: 48%; 

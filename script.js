@@ -9,11 +9,15 @@ let prevTimestamp = 0;
 let scrolling = 0;
 let scrollPos = 0;
 let prevPointerY = 0;
+const headerSpaceRatio = .98;
 let headerSpaceX = 0;
 let headerSpaceY = 0;
+let headerSpaceWidth = 0;
+let headerSpaceHeight = 0;
 let fontSize = 0;
 let totalHeaders = 0;
 let pageIsOpen = 0;
+
 
 
 // Dynamic canvas sizing
@@ -26,8 +30,10 @@ function resizeCanvas() {
     fontSize = Math.ceil(screenScale * 24);
 
     // Headers
-    headerSpaceX = spaceCanvas.width * .86;
-    headerSpaceY = spaceCanvas.height * .86;
+    headerSpaceX = spaceCanvas.width * (1 - headerSpaceRatio);
+    headerSpaceY = spaceCanvas.height * (1 - headerSpaceRatio);
+    headerSpaceWidth = spaceCanvas.width - ((spaceCanvas.width * (1 - headerSpaceRatio)) * 2);
+    headerSpaceHeight = spaceCanvas.height - ((spaceCanvas.height * (1 - headerSpaceRatio)) * 2);
     headers.forEach((header) => {
         let coords = calcHeaderLocation(header);
         header.x = coords.x;
@@ -49,6 +55,8 @@ const pages = document.querySelectorAll(".page");
 const tech = document.getElementById("tech");
 const art = document.getElementById("art");
 const music = document.getElementById("music");
+
+document.querySelectorAll("*").forEach(elem => elem.setAttribute("draggable", "false"));
 
 
 
@@ -392,8 +400,10 @@ function calcHeaderLocation(header) {
     spctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
     const headerWidth = spctx.measureText(header.hexName).width;
     const headerHeight = spctx.measureText(header.hexName).actualBoundingBoxAscent;
-    let headerX = header.initX * headerSpaceX;
-    let headerY = header.initY * headerSpaceY;
+    let headerX = header.initX * spaceCanvas.width;
+    let headerY = header.initY * spaceCanvas.height;
+
+
 
     if(header.name === "VAETTIR") {
         let x = (header.initX * spaceCanvas.width) - ((spctx.measureText("V   A   E   T   T   I   R").width) / 2);
@@ -403,15 +413,21 @@ function calcHeaderLocation(header) {
         return {x, y, textX, textY};
     }
     
-    if(headerWidth + headerX > headerSpaceX) {
-        headerX -= (headerWidth + headerX) - spaceCanvas.width;
+
+
+    if(headerWidth + headerX > headerSpaceX + headerSpaceWidth) {
+        headerX = (headerSpaceX + headerSpaceWidth) - (headerWidth * 1.16);
+    } else if(headerX < headerSpaceX) {
+        headerX = headerSpaceX + headerWidth * 1.16;
     }
-    if(headerY - headerHeight < spaceCanvas.height - headerSpaceY) {
-        headerY += headerHeight;
-    } else if (headerY + headerHeight > headerSpaceY) {
-        headerY -= headerHeight;
+    if(headerY - headerHeight < headerSpaceY) {
+        headerY = headerSpaceY + headerHeight * 1.16;
+    } else if (headerY + headerHeight > headerSpaceY + headerSpaceHeight) {
+        headerY = (headerSpaceY + headerSpaceHeight) - (headerHeight * 1.16);
     }
     
+
+
     let x = headerX;
     let y = headerY;
     let textX = spctx.measureText(header.hexName).width;
@@ -424,6 +440,8 @@ function calcHeaderLocation(header) {
 
 function drawHeaders(){
     if(pageIsOpen) return;
+    // spctx.fillStyle = "#FF0000"; // DEBUG
+    // spctx.fillRect((spaceCanvas.width * (1 - headerSpaceRatio)), ((spaceCanvas.height * (1 - headerSpaceRatio))), headerSpaceWidth, headerSpaceHeight); // DEBUG
     headers.forEach((header) => {
         spctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
         spctx.fillStyle = "rgb(216, 216, 216)";
@@ -435,7 +453,7 @@ function drawHeaders(){
         let headerY = header.y;
 
         if(header.name === "VAETTIR") {
-            spctx.fillStyle = "#07041444";
+            spctx.fillStyle = "#070414DD";
             spctx.fillRect(header.x - (header.textX * .16), header.textY - (headerHeight * 1.16), header.textX + ((header.textX * .16) * 2), headerHeight + ((headerHeight * 1.16) * 2));
             spctx.fillStyle = "rgb(216, 216, 216)";
             spctx.fillText("V   A   E   T   T   I   R", headerX, headerY);
@@ -460,7 +478,7 @@ function drawHeaders(){
 
 
             // Background
-            spctx.fillStyle = "#07041444";
+            spctx.fillStyle = "#070414DD";
             if(i === 0) {
                 spctx.fillRect(chunkPosX - ((chunkWidth / 2) * 2), header.textY - (headerHeight * 1.16), chunkWidth / 2, headerHeight + ((headerHeight * 1.16) * 2));
             } else if(i + 1 === header.name.length) {

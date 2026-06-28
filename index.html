@@ -22,7 +22,33 @@
 
     <canvas id="spaceCanvas"></canvas>
 
+    <audio id="aud" src="assets/Music/Audio/Substance.mp3"></audio>
+
+
+
+    <!-- MENU -->
+
+    <div id="menu" class="menuHidden">
+        <div id="menuButton" class="menuButtonHidden">
+            <p><</p>
+        </div>
+        <div id="menuContents" class="menuContentsHidden">
+            <img id="currentTrackArt" src="assets/Music/Artwork/LossThumbnail.jpg" class="menuItem"/>
+            <div id="audioControls">
+                <img id="playPauseBtn" src="assets/Music/Audio/Play.png" class="menuItem"/>
+                <input type="range" id="trackProgress" min="0" max="100" value="0" class="menuItem"/>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <!-- PAGES -->
+
     <div id="overlayBackground">
+
+        <!-- TECH -->
 
         <div id="tech" class="page">
             <button id="close" class="closeBtn">x</button>
@@ -74,11 +100,48 @@
             </div>
         </div>
 
+        <!-- MUSIC -->
+
         <div id="music" class="page">
             <button id="close" class="closeBtn">x</button>
 
             <h1>M U S I C</h1>
+            <hr/>
+            <br/>
+
+            <div id="albums">
+                <!-- Memoriam -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Memoriam</h4>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Memoriam.wav">Memoriam</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/Memoriam.jpg"/>
+                    </div>
+                </div>
+                <!-- New Dawn -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>New Dawn</h4>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/NewDawn.wav">New Dawn</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/NewDawn.jpg"/>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+        <!-- ART -->
 
         <div id="art" class="page">
             <button id="close" class="closeBtn">x</button>

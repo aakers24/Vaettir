@@ -60,6 +60,29 @@ document.querySelectorAll("*").forEach(elem => elem.setAttribute("draggable", "f
 
 
 
+// Audio
+const audio = document.getElementById("aud");
+const trackProgress = document.getElementById("trackProgress");
+
+let actx;
+let analyser;
+let audBuff;
+
+function audioInit() {
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const asrc = actx.createMediaElementSource(aud);
+    analyser = actx.createAnalyser();
+    asrc.connect(analyser);
+    analyser.connect(actx.destination);
+
+    analyser.fftSize = 256;
+    const bufferLen = analyser.frequencyBinCount;
+    audBuff = new Uint8Array(bufferLen);
+}
+
+
+
 // Procedural Randomness Generator
 function seedGen() {
 return (Math.random() * Math.random() * 8821 * 43481 * 51659 * 73476511) % Number.MAX_SAFE_INTEGER;
@@ -797,6 +820,79 @@ function closePage() {
 // close.addEventListener("click", closePage);
 close.forEach(btn => {
     btn.addEventListener("click", closePage);
+});
+
+
+
+// Menu
+const menu = document.getElementById("menu");
+const menuButton = document.getElementById("menuButton");
+const menuContents = document.getElementById("menuContents");
+const playPauseBtn = document.getElementById("playPauseBtn");
+let menuClosing = 0;
+
+menuButton.addEventListener("click", () => {
+    menu.classList.toggle("menuHidden");
+    menuButton.classList.toggle("menuButtonHidden");
+    menuContents.classList.toggle("menuContentsHidden");
+    if(menuClosing) {
+        menuContents.style.maxWidth = "0cqmax";
+        menuClosing = 0;
+    } else {
+        menuContents.style.maxWidth = "50cqmax";
+        menuClosing = 1;
+    }
+});
+
+playPauseBtn.addEventListener("click", () => {
+    if(!actx) audioInit();
+    if(actx.state === "suspended") actx.resume();
+
+    if(audio.paused) {
+        audio.play();
+        playPauseBtn.setAttribute("src", "assets/Music/Audio/Pause.png");
+    } else {
+        audio.pause();
+        playPauseBtn.setAttribute("src", "assets/Music/Audio/Play.png");
+    }
+});
+
+
+
+// Audio
+
+audio.addEventListener("timeupdate", () => {
+    const perc = (audio.currentTime / audio.duration) * 100;
+    trackProgress.value = perc || 0;
+    trackProgress.style.setProperty("--progress", `${trackProgress.value}%`);
+    if(perc === 100) playPauseBtn.setAttribute("src", "assets/Music/Audio/Play.png");
+});
+
+trackProgress.addEventListener("input", () => {
+    const seekTime = (trackProgress.value / 100) * audio.duration;
+    audio.currentTime = seekTime;
+});
+
+
+
+// Music
+const albums = document.getElementById("albums");
+
+albums.addEventListener("click", (event) => {
+    const albumCard = event.target.closest(".albumCard");
+    const trackListEntry = event.target.closest(".trackListEntry");
+
+    if(!albumCard) return;
+
+    if(!albumCard.classList.contains("revealed")) {
+        albumCard.classList.add("revealed");
+        return;
+    }
+
+    if (trackListEntry) {
+        audio.src = trackListEntry.dataset.src;
+        audio.play();
+    }
 });
 
 

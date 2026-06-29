@@ -823,6 +823,12 @@ close.forEach(btn => {
     btn.addEventListener("click", closePage);
 });
 
+window.addEventListener("keydown", (event) => {
+    if(event.key === "Escape") {
+        closePage();
+    }
+});
+
 
 
 // Menu

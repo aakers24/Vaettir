@@ -30,7 +30,12 @@
 * Music interacts with stars/background
 
 * Arrow button in the bottom left(?) that you click/press to open and see the other buttons (Play/Pause music, volume, stop animations(?) / star drift on/off, REFRESH!/reload/home, game mode, Screen saver mode!!!, etc.)
-    * When pressed the button itself moves to the right to be on the other side of the bar that slides out and swaps directions from > to < so it cane hide it again
+    * Add remaining buttons/features
+
+* Headers(?)
+    * Shuffle the headers within the header structure so they're in a random order?
+    * Maybe remove header backgrounds for aesthetics?
+        * Improve readability if needed afterwards
 
 ---
 
@@ -41,14 +46,8 @@
     * Further abstract the Dynamic HTML and/or headers (?)
     * Make it easier to add content in the future such as music, photos, etc.
 
-* Headers
-    * Shuffle the headers within the header structure so they're in a random order?
-    * Maybe remove header backgrounds for aesthetics?
-        * Improve readability if needed afterwards
-
 * Pages in progress!!!
     * Import/add content to pages
-    * Explicitly style the `<hr/>`s
 
 * Music
     * Selecting a new track changes the audio controls/pic in the menu properly. Maybe just applies to the audio object at all? CHECK EVERYTHING

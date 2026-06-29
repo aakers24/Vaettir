@@ -58,6 +58,26 @@ const music = document.getElementById("music");
 
 document.querySelectorAll("*").forEach(elem => elem.setAttribute("draggable", "false"));
 
+// Custom cursor
+const cursor = document.querySelector(".myCursor");
+
+window.addEventListener("pointermove", (event) => {
+    // if(pointer.x === undefined || pointer.y === undefined) {
+    //     cursor.style.opacity = 0;
+    // } else {
+    //     cursor.style.opacity = 1;
+    //     cursor.style.left = pointer.x + "px";
+    //     cursor.style.top = pointer.y + "px";
+    // }
+    cursor.style.opacity = 1;
+    cursor.style.left = pointer.x + "px";
+    cursor.style.top = pointer.y + "px";
+});
+
+window.addEventListener("pointerleave", (event) => {
+    cursor.style.opacity = 0;
+});
+
 
 
 // Audio

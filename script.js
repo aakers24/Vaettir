@@ -58,31 +58,13 @@ const music = document.getElementById("music");
 
 document.querySelectorAll("*").forEach(elem => elem.setAttribute("draggable", "false"));
 
-// Custom cursor
-const cursor = document.querySelector(".myCursor");
-
-window.addEventListener("pointermove", (event) => {
-    // if(pointer.x === undefined || pointer.y === undefined) {
-    //     cursor.style.opacity = 0;
-    // } else {
-    //     cursor.style.opacity = 1;
-    //     cursor.style.left = pointer.x + "px";
-    //     cursor.style.top = pointer.y + "px";
-    // }
-    cursor.style.opacity = 1;
-    cursor.style.left = pointer.x + "px";
-    cursor.style.top = pointer.y + "px";
-});
-
-window.addEventListener("pointerleave", (event) => {
-    cursor.style.opacity = 0;
-});
-
 
 
 // Audio
 const audio = document.getElementById("aud");
+const volume = document.getElementById("volume");
 const trackProgress = document.getElementById("trackProgress");
+const trackArt = document.getElementById("currentTrackArt");
 
 let actx;
 let analyser;
@@ -837,7 +819,6 @@ function closePage() {
     pageIsOpen = 0;
 }
 
-// close.addEventListener("click", closePage);
 close.forEach(btn => {
     btn.addEventListener("click", closePage);
 });
@@ -881,6 +862,14 @@ playPauseBtn.addEventListener("click", () => {
 
 // Audio
 
+audio.volume = .32; // Initalize volume
+volume.style.setProperty("--progress", `${volume.value}%`);
+
+volume.addEventListener("input", () => {
+    audio.volume = volume.value / 100;
+    volume.style.setProperty("--progress", `${volume.value}%`);
+});
+
 audio.addEventListener("timeupdate", () => {
     const perc = (audio.currentTime / audio.duration) * 100;
     trackProgress.value = perc || 0;
@@ -901,8 +890,26 @@ const albums = document.getElementById("albums");
 albums.addEventListener("click", (event) => {
     const albumCard = event.target.closest(".albumCard");
     const trackListEntry = event.target.closest(".trackListEntry");
+    const albumArt = albumCard ? albumCard.querySelector(".albumArt") : null;
+
+    
+
+    // Close other cards
+    let allCards = albums.querySelectorAll(".albumCard");
+    allCards.forEach((album) => {
+        if(!albumCard) {
+            album.classList.remove("revealed");
+        }
+        if(album != albumCard && album.classList.contains("revealed")) {
+            album.classList.remove("revealed");
+        }
+    });
+
+
 
     if(!albumCard) return;
+
+
 
     if(!albumCard.classList.contains("revealed")) {
         albumCard.classList.add("revealed");
@@ -912,6 +919,8 @@ albums.addEventListener("click", (event) => {
     if (trackListEntry) {
         audio.src = trackListEntry.dataset.src;
         audio.play();
+        playPauseBtn.setAttribute("src", "assets/Music/Audio/Pause.png")
+        trackArt.setAttribute("src", albumArt.src);
     }
 });
 

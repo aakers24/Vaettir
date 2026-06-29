@@ -45,16 +45,3 @@
     * Continually check in on this
     * Further abstract the Dynamic HTML and/or headers (?)
     * Make it easier to add content in the future such as music, photos, etc.
-
-* Pages in progress!!!
-    * Import/add content to pages
-
-* Music
-    * Selecting a new track changes the audio controls/pic in the menu properly. Maybe just applies to the audio object at all? CHECK EVERYTHING
-    * Clicking outside of an albumCard and/or closing the music page removes the revealed state
-    * Get them to display in 2 colums and square instead of cut off and short
-
-* Menu
-    * Add Volume slider!!!
-
-* Investigate cursor disappearing?

@@ -22,8 +22,6 @@
 
     <canvas id="spaceCanvas"></canvas>
 
-    <div class="myCursor"></div>
-
     <audio id="aud" src="assets/Music/Audio/Substance.mp3"></audio>
 
 
@@ -38,6 +36,7 @@
             <img id="currentTrackArt" src="assets/Music/Artwork/LossThumbnail.jpg" class="menuItem"/>
             <div id="audioControls">
                 <img id="playPauseBtn" src="assets/Music/Audio/Play.png" class="menuItem"/>
+                <input type="range" id="volume" min="0" max="100" value="32" class="menuItem"/>
                 <input type="range" id="trackProgress" min="0" max="100" value="0" class="menuItem"/>
             </div>
         </div>
@@ -112,32 +111,136 @@
             <br/>
 
             <div id="albums">
+
+
+                
                 <!-- Memoriam -->
                 <div class="albumCard">
                     <div class="cardTracks">
                         <h4>Memoriam</h4>
+                        <hr/>
                         <ul>
                             <li class="trackListEntry" data-src="assets/Music/Audio/Memoriam.wav">Memoriam</li>
                         </ul>
                     </div>
 
                     <div class="cardCover">
-                        <img src="assets/Music/Artwork/Memoriam.jpg"/>
+                        <img src="assets/Music/Artwork/Memoriam.jpg" class="albumArt"/>
                     </div>
                 </div>
+
                 <!-- New Dawn -->
                 <div class="albumCard">
                     <div class="cardTracks">
                         <h4>New Dawn</h4>
+                        <hr/>
                         <ul>
                             <li class="trackListEntry" data-src="assets/Music/Audio/NewDawn.wav">New Dawn</li>
                         </ul>
                     </div>
 
                     <div class="cardCover">
-                        <img src="assets/Music/Artwork/NewDawn.jpg"/>
+                        <img src="assets/Music/Artwork/NewDawn.jpg" class="albumArt"/>
                     </div>
                 </div>
+
+                <!-- Trial By Fire -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Trial By Fire</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/TrialByFire.wav">Trial By Fire</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/TrialByFire.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+                <!-- Growth -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Growth</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Departure.wav">Departure</li>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Continuance.wav">Continuance</li>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Epiphany.wav">Epiphany</li>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/ForgiveMyself.wav">Forgive Myself</li>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/RendezvousInADream.wav">Rendezvous in a Dream</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/Growth.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+                <!-- 3vk2y -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>3vk2y</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/3vk2y.wav">3vk2y</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/3vk2y.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+                <!-- Loss -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Loss</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/She_Never_Said_Slightly_Mixed.mp3">She Never Said</li>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Substance.mp3">Substance</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/LossThumbnail.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+                <!-- Dearly Departed -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Dearly Departed</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/Dearly Departed Mixed.wav">Dearly Departed</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/DearlyDepartedThumbnail.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+                <!-- Searching For Soul -->
+                <div class="albumCard">
+                    <div class="cardTracks">
+                        <h4>Searching For Soul</h4>
+                        <hr/>
+                        <ul>
+                            <li class="trackListEntry" data-src="assets/Music/Audio/SearchingForSoul.mp3">Searching For Soul</li>
+                        </ul>
+                    </div>
+
+                    <div class="cardCover">
+                        <img src="assets/Music/Artwork/SearchingThumbnail.jpg" class="albumArt"/>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
 
